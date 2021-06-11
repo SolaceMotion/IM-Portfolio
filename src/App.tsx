@@ -1,64 +1,16 @@
-import { motion, AnimatePresence, useCycle } from 'framer-motion'
-import React, { useState, useEffect, useRef } from 'react'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useLocation,
-} from 'react-router-dom'
-import { FaGithub } from 'react-icons/fa'
-import calc_img from './img/calc.png'
-import dom_img from './img/DOM.png'
-import form_img from './img/form.png'
-import im_img from './img/im.png'
-import sq_img from './img/sq.png'
-import wad_img from './img/wad.png'
-import './App.css'
+import { motion, AnimatePresence, useCycle } from 'framer-motion';
+import { useState } from 'react';
+import { Switch, Route, Link, useParams, useLocation } from 'react-router-dom';
+import { FaGithub } from 'react-icons/fa';
+import './App.css';
 
-const PROJECTS = {
-  msBDL0aK1diyEwqivi0LuQ: {
-    //random base64 strings
-    title: 'Wordpress Site',
-    desc: 'First Project',
-    url: 'https://tullux.se/wp2/',
-    img: wad_img,
-  },
-  z4hgsiR4jSQWWKW9y2BXFg: {
-    title: 'Register Form',
-    desc: 'A form',
-    url:
-      'http://infomedia.orebro.se/xoleri24/projects/register%20form/registerform.html',
-    img: form_img,
-  },
-  mFNiGxNWqrlBW4CuJijrdQ: {
-    title: 'Grid Calculator',
-    desc: 'A calculator design',
-    url:
-      'http://infomedia.orebro.se/xoleri24/projects/grid%20calculator%20js/calculator.html',
-    img: calc_img,
-  },
-  sNPsncmyiPgsiRJMmBqpAg: {
-    title: 'DOM',
-    desc: 'DOM-script testing',
-    url: 'http://infomedia.orebro.se/xoleri24/projects/Dom%20test/DOM.html',
-    img: dom_img,
-  },
-  XfwyH12jU03LlmFjNjGmsw: {
-    title: 'Infomedia',
-    desc: 'Bootstrap recreation',
-    url:
-      'http://infomedia.orebro.se/xoleri24/projects/Bootstrap%20skeleton%20infomedia%20site/infomedia.html',
-    img: im_img,
-  },
-  dpMbLhj7nnRvPdbWUMIq0w: {
-    title: 'Speedrun Quiz',
-    desc: 'Oliver, Emma, Francis & Robert',
-    url: 'http://infomedia.orebro.se/xoleri24/projects/Colab/index.html',
-    img: sq_img,
-  },
-}
+/* import * as T from "three" */
+import DrawerLinks from './components/drawer-links';
+import { PROJECTS } from './projects-data';
+import ThreeJs from './components/threejs';
+/* import $ from "jquery" */
+
+import { Project } from './Types';
 
 const pageVariants = {
   initial: {
@@ -76,7 +28,7 @@ const pageVariants = {
     x: '100vw',
     scale: 1.2,
   },
-}
+};
 
 /* const variants = {
   open: { opacity: 1, x: 0 },
@@ -87,18 +39,20 @@ const pageTransition = {
   type: 'spring',
   ease: 'anticipate',
   duration: 0.6,
-}
+};
 
 const navBarTransition = {
   type: 'linear',
-}
+};
 
 function App() {
-  const location = useLocation()
+  const location = useLocation();
+
   return (
     <>
+      <ThreeJs />
       <Navigation />
-      <div style={{ overflowX: 'hidden' }} className="app">
+      <div style={{ overflowX: 'hidden' }} id="d" className="app">
         <AnimatePresence exitBeforeEnter>
           <Switch location={location} key={location.pathname}>
             <Route path="/projects/:id" component={ItemDetail} />
@@ -107,66 +61,52 @@ function App() {
         </AnimatePresence>
       </div>
     </>
-  )
+  );
 }
 
 const Hero = () => {
-  const colors = [
-    'red',
-    'blue',
-    'green',
-    'yellow',
-    'purple',
-    'pink',
-    'brown',
-    'magenta',
-  ]
+  const [width, setWidth] = useState<number>(window.innerWidth);
+  window.addEventListener('resize', () => setWidth(window.innerWidth));
 
-  const randomColors = colors[Math.floor(Math.random() * colors.length)]
-  const [logo, setLogo] = useState({ color: randomColors })
-  console.log(logo)
+  const colors: Array<string> = ['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'brown', 'magenta'];
+
+  const randomColors: string = colors[Math.floor(Math.random() * colors.length)];
+  const [logo, setLogo] = useState<{ color: string }>({ color: randomColors });
 
   return (
-    <motion.div
-      initial="initial"
-      animate="in"
-      exit="out"
-      variants={pageVariants}
-      transition={pageTransition}
-    >
-      <h1 className="hero">OLIVER</h1>
-
+    <motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
       <div style={{ textAlign: 'center' }}>
         <FaGithub
-          size={70}
+          size={width > 600 ? 90 : 11.5 + 'vmin'}
           style={logo}
           onClick={() => setLogo({ color: randomColors })}
         />
         <br></br>
         <a
           className="wutdis"
+          target="_blank"
           href="https://github.com/SolaceMotion"
           style={logo.color !== 'blue' ? { visibility: 'hidden' } : {}} //else display block
         >
-          wut dis?
+          ?
         </a>
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
-const Path = (props) => (
+const Path = props => (
   <motion.path
+    /* stroke="hsl(0, 0%, 18%)" */
     fill="transparent"
     strokeWidth="3"
-    /* stroke="hsl(0, 0%, 18%)" */
     stroke="#fff"
     strokeLinecap="round"
     {...props}
   />
-)
-//Paths are kind of broken, taken from a tutorial and I messed up
-const MenuToggle = ({ toggle }) => (
+);
+
+const MenuToggle = ({ toggle }: { toggle: () => void }) => (
   <button onClick={toggle}>
     <svg width="23" height="23" viewBox="0 0 23 23">
       <Path
@@ -191,7 +131,7 @@ const MenuToggle = ({ toggle }) => (
       />
     </svg>
   </button>
-)
+);
 
 const menuItemVariants = {
   open: {
@@ -210,12 +150,12 @@ const menuItemVariants = {
       y: { stiffness: 1000 },
     },
   },
-}
+};
 
 // Naive implementation - in reality would want to attach
 // a window or resize listener. Also use state/layoutEffect instead of ref/effect
 // if this is important to know on initial client render.
-// It would be safer to  return null for unmeasured states.
+// It would be safer to return null for unmeasured states.
 
 const sidebar = {
   open: (height = 1000) => ({
@@ -235,7 +175,7 @@ const sidebar = {
       damping: 40,
     },
   },
-}
+};
 
 /* const useDimensions = (ref) => {
   const dimensions = useRef({ width: 0, height: 0 })
@@ -249,10 +189,11 @@ const sidebar = {
 } */
 
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  /* const containerRef = useRef(null)
-  const { height } = useDimensions(containerRef) */
-
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  /* 
+    const containerRef = useRef(null)
+    const { height } = useDimensions(containerRef)
+  */
   return (
     <>
       <motion.nav
@@ -262,16 +203,14 @@ const Navigation = () => {
         /* custom={height}
         ref={containerRef} */
       >
-        <motion.div className="background" variants={sidebar}></motion.div>
-        <SideNav
-        /* handleStyle={isOpen ? { display: "block" } : { display: "none" }} */
-        />
+        <motion.div className="burger-background" variants={sidebar}></motion.div>
+        <SideNav projectObject={PROJECTS} handleStyle={isOpen ? { display: 'block' } : { display: 'none' }} />
         {/* Display none if sidenav is not open, screws up the out animation*/}
-        <MenuToggle toggle={() => setIsOpen(!isOpen)} />
+        <MenuToggle toggle={() => setIsOpen(prevState => !prevState)} />
       </motion.nav>
     </>
-  )
-}
+  );
+};
 
 const sideNavVariants = {
   open: {
@@ -280,42 +219,46 @@ const sideNavVariants = {
   closed: {
     transition: { staggerChildren: 0.05, staggerDirection: -1 },
   },
-}
+};
 
-const SideNav = ({ handleStyle }) => {
+const SideNav = ({
+  handleStyle,
+  projectObject,
+}: {
+  handleStyle: any;
+  projectObject: Record<number, Project>;
+}) => {
   //Pass object to Navigation component
-
   return (
     <motion.ul variants={sideNavVariants} style={handleStyle}>
       {/* Attempt to fix out animation */}
-      <motion.li
-        variants={menuItemVariants}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-      >
+      <motion.li variants={menuItemVariants} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
         <Link to="/">Home</Link>
       </motion.li>
-      {Object.keys(PROJECTS).map((item) => {
-        console.log(item.title)
+      {Object.keys(projectObject).map((item, i) => {
         return (
           <motion.li
             variants={menuItemVariants}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            key={i}
           >
-            <Link key={item} to={`/projects/${item}`}>
-              {PROJECTS[item].title}
-            </Link>
+            <DrawerLinks
+              isNew={projectObject[item].new}
+              item={item}
+              key={i}
+              title={projectObject[item].title}
+            />
           </motion.li>
-        )
+        );
       })}
     </motion.ul>
-  )
-}
+  );
+};
 
 const ItemDetail = () => {
-  const { id } = useParams() //picks up the id that was clicked and grabs its properties
-  console.log(PROJECTS[id])
+  const { id } = useParams<{ id: string }>(); //picks up the id that was clicked and grabs its properties
+  /* console.log(PROJECTS[id]) */
   /* console.log(match) */
 
   //Check images using match
@@ -330,10 +273,10 @@ const ItemDetail = () => {
         transition={pageTransition}
       >
         <div className="card">
-          <h1 className="paragraph">{PROJECTS[id].title}</h1>
+          <h1 className="title">{PROJECTS[id].title}</h1>
           <p className="margin paragraph">{PROJECTS[id].desc}</p>
 
-          <motion.img width="500" height="256" src={PROJECTS[id].img} />
+          <motion.img className="jumboimg" width="500" height="256" src={PROJECTS[id].img} />
           <motion.a
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -349,7 +292,7 @@ const ItemDetail = () => {
       <a href={match.url}>dd</a> */}
       </motion.div>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

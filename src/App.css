@@ -1,5 +1,10 @@
 * {
   margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(20, 20, 20);
 }
 
 button {
@@ -15,16 +20,14 @@ button {
   border-radius: 50%;
   background: transparent; /* remove background from button */
 }
-
 .app {
   width: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
 }
-
 ul {
   position: absolute;
   top: 100px;
@@ -36,11 +39,14 @@ li {
   line-height: 2;
   cursor: pointer;
 }
+.title {
+  color: #fff;
+  text-align: center;
+}
 .paragraph {
   color: #fff;
   text-align: center;
 }
-
 /* .sidebar {
   background-color: rgb(37, 37, 37);
   line-height: 2;
@@ -58,7 +64,6 @@ a {
   display: block;
   color: #fff;
 }
-
 .button {
   background-color: rgb(17, 17, 17);
   margin: auto;
@@ -67,29 +72,54 @@ a {
   font-weight: 500;
   border-radius: 40px;
 }
-
-.margin {
+p.margin {
+  margin-top: 10px;
   margin-bottom: 15px;
 }
-
-.hero {
-  font-size: 13vw;
+h1.hero {
+  font-size: 18vmin;
   color: rgb(26, 26, 26);
   user-select: none;
 }
-
-.card {
+div.card {
   background-color: rgb(27, 27, 27);
   padding: 20px;
+  -webkit-box-shadow: 0px 5px 15px 4px rgba(0,0,0,0.25); 
+  box-shadow: 0px 5px 15px 4px rgba(0,0,0,0.25);
 }
-
-.background {
+.burger-background {
   position: absolute;
   z-index: 2;
   top: 0;
   left: 0;
   bottom: 0;
   width: 300px;
-  /* background: #fff; */
   background: rgb(17, 17, 17);
+}
+img.jumboimg {
+  max-width: 100%;
+  height: auto;
+}
+@media screen and (max-width: 600px) {
+  div.card {
+    width: 80vw;
+  }
+}
+@media screen and (max-width: 400px) {
+  h1.title {
+    font-size: 8vw;
+  }
+  a.paragraph, p.paragraph {
+    font-size: 4vw;
+  }
+}
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  animation: canvas-opaque 0.5s ease;
+}
+@keyframes canvas-opaque {
+  from {opacity: 0;}
+  to {opacity: 1;}
 }
